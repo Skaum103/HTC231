@@ -31,8 +31,7 @@ def identify(image):
     # Save the image with a unique filename
     image.save(f"images/{filename}")
     path = "images/"+filename
-    response = identify_gpt(path)
-    result = response['choices'][0]['message']['content']
+    result = identify_gpt(path)
     print(result)
 
     return result
