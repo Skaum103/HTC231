@@ -31,8 +31,9 @@ def identify(image):
     # Save the image with a unique filename
     image.save(f"images/{filename}")
     path = "images/"+filename
-    identify_gpt(path)
-    result = "none"
+    response = identify_gpt(path)
+    result = response['choices'][0]['message']['content']
+    print(result)
 
     return result
 
@@ -63,7 +64,7 @@ def login():
             if result == "success":
                 session["userName"] = username
                 session["userID"] = user_id
-                return identify(request.files['image'])
+                return identify(request.files['image']), status
 
         except Exception as e:
             print(f"Error: {e}")

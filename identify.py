@@ -4,7 +4,7 @@ import requests
 
 def identify_gpt(path):
     # OpenAI API Key
-    api_key="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"
+    api_key="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"
     # Function to encode the image
     def encode_image(image_path):
         with open(image_path, "rb") as image_file:
@@ -44,6 +44,8 @@ def identify_gpt(path):
     }
     response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=payload)
     print(response.json())
+    return response
+
 
 if __name__ == "__main__":
     identify_gpt("images/test.png")
