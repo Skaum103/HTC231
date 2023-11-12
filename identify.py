@@ -29,7 +29,7 @@ def identify_gpt(path):
             "content": [
               {
                 "type": "text",
-                "text": "What’s in this image?"
+                "text": "Choose what kind of garbage it is.  Select from a list. [Recyclables, Organics, Garbage]. Give a single word answer."
               },
               {
                 "type": "image_url",
