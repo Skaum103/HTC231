@@ -12,14 +12,6 @@ app.secret_key = "super secret key"
 
 
 def check(username, password):
-    if username == "lionel":
-        return password == "antonela240687", 1
-    if username == "cristiano":
-        return password == "mariamadrid1985jr", 2
-    if username == "neymar":
-        return password == "#Q5%7Mj5N&xDP", 3
-    if username == "karim":
-        return password == "xiTSM3nTr6j^m", 4
     if username == "root":
         return password == "GTfCR38n3A", 5
 

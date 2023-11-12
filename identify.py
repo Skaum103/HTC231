@@ -4,7 +4,7 @@ import requests
 
 def identify_gpt(path):
     # OpenAI API Key
-    api_key="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"
+    api_key=""
     # Function to encode the image
     def encode_image(image_path):
         with open(image_path, "rb") as image_file:
