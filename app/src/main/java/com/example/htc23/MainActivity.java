@@ -1,5 +1,6 @@
 package com.example.htc23;
 
+import android.annotation.SuppressLint;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,10 +16,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -36,7 +33,6 @@ import okhttp3.Request;
 public class MainActivity extends AppCompatActivity {
 
     private ImageView imageView;
-    private Button button;
     private TextView textView;
     private TextView processingText;
     @Override
@@ -44,18 +40,21 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Initialize the views
         imageView = findViewById(R.id.imageView);
-        button = findViewById(R.id.button);
+        Button button = findViewById(R.id.button);
         textView = findViewById(R.id.textView);
         textView.setVisibility(View.INVISIBLE);
         processingText = findViewById(R.id.processingText);
 
+        // Check for camera permission
         if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{
                     Manifest.permission.CAMERA
             }, 100);
         }
 
+        // Set a click listener for submit the button
         button.setOnClickListener(view -> {
             textView.setVisibility(View.INVISIBLE);
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -71,20 +70,27 @@ public class MainActivity extends AppCompatActivity {
             Bitmap bitmap = (Bitmap) Objects.requireNonNull(data.getExtras()).get("data");
             imageView.setImageBitmap(bitmap);
 
+            // Convert the bitmap to bytes array
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             assert bitmap != null;
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
             byte[] byteArray = stream.toByteArray();
 
+            // Send the image to the server
             sendImageToServer(byteArray);
             processingText.setVisibility(View.VISIBLE);
         }
     }
 
 
+    /**
+     * Send the image to the server
+     * @param imageBytes The image in bytes array
+     */
     private void sendImageToServer(byte[] imageBytes) {
         OkHttpClient client = new OkHttpClient();
 
+        // Create the request body, put username password and image bytes in it
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("username", "lionel")
@@ -93,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
                         RequestBody.create(MediaType.parse("image/png"), imageBytes))
                 .build();
 
+        // Create the request, send to server and get the response
         Request request = new Request.Builder()
                 .url("http://24.224.142.115:3000/identify")
                 .post(requestBody)
@@ -105,6 +112,8 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
+            // Extract the text from the response data, and set it to the TextView
+            @SuppressLint("SetTextI18n")
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 if (!response.isSuccessful() || response.body() == null) {
